@@ -1,7 +1,5 @@
 package com.trainerworkloadservice.model;
 
-
-
 import java.util.ArrayList;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -20,6 +18,10 @@ public class Year {
   public Year(int year) {
     this.year = year;
     this.months = new ArrayList<>();
+
   }
 
+  public static Year of(int year) {
+    return new Year(year);
+  }
 }

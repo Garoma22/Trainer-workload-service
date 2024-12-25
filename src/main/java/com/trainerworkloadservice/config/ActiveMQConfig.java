@@ -1,34 +1,43 @@
 package com.trainerworkloadservice.config;
 
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.jms.ConnectionFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.activemq.ActiveMQConnectionFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jms.annotation.EnableJms;
 import org.springframework.jms.config.DefaultJmsListenerContainerFactory;
 import org.springframework.jms.core.JmsTemplate;
-import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.web.SecurityFilterChain;
 
 @Slf4j
 @Configuration
 @EnableJms
 public class ActiveMQConfig {
 
+
+
+  @Value("${spring.activemq.broker-url}")
+  private String brokerUrl;
+
+  @Value("${spring.activemq.user}")
+  private String username;
+
+  @Value("${spring.activemq.password}")
+  private String password;
+
   @Bean
   public ConnectionFactory connectionFactory() {
     ActiveMQConnectionFactory factory = new ActiveMQConnectionFactory();
-    factory.setBrokerURL("tcp://localhost:61616");
-    factory.setUserName("admin");
-    factory.setPassword("admin");
+    factory.setBrokerURL(brokerUrl);
+    factory.setUserName(username);
+    factory.setPassword(password);
     return factory;
   }
+
 
   @Bean
   public JmsTemplate jmsTemplate(ConnectionFactory connectionFactory) {

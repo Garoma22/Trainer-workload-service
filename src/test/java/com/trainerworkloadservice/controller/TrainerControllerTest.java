@@ -1,6 +1,6 @@
 package com.trainerworkloadservice.controller;
 
-import com.trainerworkloadservice.TrainerInfoService;
+import com.trainerworkloadservice.service.TrainerInfoService;
 import com.trainerworkloadservice.dto.TrainerInfoResponseDto;
 import com.trainerworkloadservice.dto.YearDto;
 import org.junit.jupiter.api.Test;
@@ -20,7 +20,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(TrainerController.class)
-@AutoConfigureMockMvc(addFilters = false)  // switch off filters in tests
+@AutoConfigureMockMvc(addFilters = false)
 class TrainerControllerTest {
 
   @Autowired
@@ -49,7 +49,7 @@ class TrainerControllerTest {
 
     mockMvc.perform(get("/trainers/{trainerUsername}/workload", trainerUsername)
             .contentType(MediaType.APPLICATION_JSON))
-        .andExpect(status().isOk()) // Проверяем статус 200 OK
+        .andExpect(status().isOk())
         .andExpect(jsonPath("$.username").value("Boris.Roris"))
         .andExpect(jsonPath("$.firstName").value("Boris"))
         .andExpect(jsonPath("$.lastName").value("Roris"))

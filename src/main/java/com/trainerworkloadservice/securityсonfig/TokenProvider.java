@@ -1,8 +1,12 @@
 package com.trainerworkloadservice.securityсonfig;
 
+import static java.util.stream.Collectors.toList;
+
 import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import java.util.Collections;
+import java.util.Optional;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -18,29 +22,36 @@ public class TokenProvider {
   private String secretKey;
 
   public Claims getAllClaimsFromToken(String token) {
-    return Jwts.parser().setSigningKey(secretKey).parseClaimsJws(token).getBody();
+    JwtParser parser = Jwts.parserBuilder()
+        .setSigningKey(secretKey)
+        .build();
+
+    return parser.parseClaimsJws(token).getBody();
   }
 
-public Authentication getAuthentication(String token) {
-  Claims claims = getAllClaimsFromToken(token);
-  List<String> roles = claims.get("roles", List.class);
-  List<SimpleGrantedAuthority> authorities;
 
-  if (roles != null) {  // todo: later we need to add roles!
-    authorities = roles.stream()
-        .map(SimpleGrantedAuthority::new)
-        .collect(Collectors.toList());
-  } else {
-    authorities = Collections.emptyList(); // Нет ролей в токене
+  public Authentication getAuthentication(String token) {
+    Claims claims = getAllClaimsFromToken(token);
+    List<String> roles = claims.get("roles", List.class);
+    List<SimpleGrantedAuthority> authorities;
+
+    if (roles != null) {
+      authorities = roles.stream()
+          .map(SimpleGrantedAuthority::new)
+          .toList();
+    } else {
+      authorities = Collections.emptyList();
+    }
+
+    User principal = new User(claims.getSubject(), "", authorities);
+    return new UsernamePasswordAuthenticationToken(principal, token, authorities);
   }
 
-  User principal = new User(claims.getSubject(), "", authorities);
-  return new UsernamePasswordAuthenticationToken(principal, token, authorities);
-}
   public boolean isTokenExpired(String token) {
     return getAllClaimsFromToken(token).getExpiration().before(new Date());
   }
-  public boolean validateToken(String token) {  //check expiration
+
+  public boolean validateToken(String token) {
     return !isTokenExpired(token);
   }
 }

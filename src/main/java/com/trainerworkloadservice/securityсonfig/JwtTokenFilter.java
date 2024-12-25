@@ -22,7 +22,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
   @Override
   protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
       throws ServletException, IOException, ServletException {
-    String token = getTokenFromRequest(request); // 1. get token from request
+    String token = getTokenFromRequest(request);
     log.info(request.toString());
     log.info(token);
 

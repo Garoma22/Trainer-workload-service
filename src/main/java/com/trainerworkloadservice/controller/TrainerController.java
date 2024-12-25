@@ -1,7 +1,7 @@
 package com.trainerworkloadservice.controller;
 
 import com.trainerworkloadservice.dto.TrainerInfoResponseDto;
-import com.trainerworkloadservice.TrainerInfoService;
+import com.trainerworkloadservice.service.TrainerInfoService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -20,17 +20,6 @@ public class TrainerController {
     this.trainerInfoService = trainerInfoService;
   }
 
-
-
-  //we are not using this control
-//  @PostMapping("/trainers/workload")
-//  public ResponseEntity<Void> processTrainerTraining(@RequestBody TrainerWorkloadServiceDto dto,
-//      HttpServletRequest request) {
-//    trainerInfoService.processTrainingData(dto);
-//    String transactionId = request.getHeader("Transaction-ID");
-//    log.info(transactionId);
-//    return ResponseEntity.ok().build();
-//  }
 
   @GetMapping("/trainers/{trainerUsername}/workload")
   public ResponseEntity<TrainerInfoResponseDto> getTrainerLoadingOfMonth(

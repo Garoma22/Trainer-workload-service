@@ -1,6 +1,4 @@
 package com.trainerworkloadservice.dto;
-
-
 import lombok.Data;
 
 @Data
